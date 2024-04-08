@@ -27,6 +27,10 @@ public abstract class ConfigurationInfo
             {
                 _hasSufficientData = false;
             }
+            else if (AddressMask.Value != null && AddressStart.Value == null)
+            {
+                _hasSufficientData = false;
+            }
             else
             {
                 _hasSufficientData = true;
@@ -35,25 +39,6 @@ public abstract class ConfigurationInfo
         }
     }
 
-    private bool? _hasCorrectData = false;
-    public bool HasCorrectData
-    {
-        get
-        {
-            if (_hasCorrectData != null) return (bool)_hasCorrectData;
-
-            _hasCorrectData = true;
-            if (LogFilePath.Value == null || OutputFilePath.Value == null)
-            {
-                _hasCorrectData = false;
-            } else if (AddressMask.Value != null && AddressStart.Value == null)
-            {
-                _hasCorrectData = false;
-            }
-            return (bool)_hasCorrectData;
-        }
-    }
-    
 
     public ConfigurationInfo()
     {
@@ -68,7 +53,6 @@ public abstract class ConfigurationInfo
     public void SetInfoChangedTrigger()
     {
         _hasSufficientData = null;
-        _hasCorrectData = null;
     }
 
     public void Append(ConfigurationInfo configurationInfo)

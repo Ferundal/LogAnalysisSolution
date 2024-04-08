@@ -38,4 +38,58 @@ public class CommandLineConfigurationInfoTests
             Assert.That(configInfo.TimeEnd.Value, Is.EqualTo(timeEnd));
         });
     }
+    
+    [Test]
+    public void CommandLineConfigurationInfo_Incorrect_Arguments()
+    {
+        // Arrange
+        var logFilePath = "test.log";
+        var outputFilePath = "output.txt";
+        var addressStart = "192.168.0.1";
+        
+        var fakeArgs = new[] {
+            $"--{ConfigurationInfo.LogFilePathOptionName}", $"{logFilePath}",
+            $"--{ConfigurationInfo.OutputFilePathOptionName}", $"{outputFilePath}",
+            "--fake-option", $"{addressStart}", 
+        };
+        
+        var configInfo = new CommandLineConfigurationInfo(fakeArgs);
+        
+        // Act & Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(configInfo.LogFilePath.Value, Is.Null);
+            Assert.That(configInfo.OutputFilePath.Value, Is.Null);
+            Assert.That(configInfo.AddressStart.Value, Is.Null);
+            Assert.That(configInfo.AddressMask.Value, Is.Null);
+            Assert.That(configInfo.TimeStart.Value, Is.Null);
+            Assert.That(configInfo.TimeEnd.Value, Is.Null);
+        });
+    }
+    
+    [Test]
+    public void CommandLineConfigurationInfo_Not_Full_Arguments()
+    {
+        // Arrange
+        var logFilePath = "test.log";
+        var outputFilePath = "output.txt";
+
+        var fakeArgs = new[] {
+            $"--{ConfigurationInfo.LogFilePathOptionName}", $"{logFilePath}",
+            $"--{ConfigurationInfo.OutputFilePathOptionName}", $"{outputFilePath}",
+        };
+        
+        var configInfo = new CommandLineConfigurationInfo(fakeArgs);
+        
+        // Act & Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(configInfo.LogFilePath.Value, Is.EqualTo(logFilePath));
+            Assert.That(configInfo.OutputFilePath.Value, Is.EqualTo(outputFilePath));
+            Assert.That(configInfo.AddressStart.Value, Is.Null);
+            Assert.That(configInfo.AddressMask.Value, Is.Null);
+            Assert.That(configInfo.TimeStart.Value, Is.Null);
+            Assert.That(configInfo.TimeEnd.Value, Is.Null);
+        });
+    }
 }
